@@ -315,15 +315,28 @@ inoremap <expr> <C-x>  <SID>hint_i_ctrl_x()
 "-----------------------------------------------
 "NeoBundle（Vimプラグインの管理）
 "-----------------------------------------------
-if has('vim_starting')
-    " 初回起動時のみruntimepathにNeoBundleのパスを指定する
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
+if has('win32')||has('win64')
+	if has('vim_starting')
+	    " 初回起動時のみruntimepathにNeoBundleのパスを指定する(絶対パス)
+	    set runtimepath+=$VIM/~/.vim/bundle/neobundle.vim/
 
-    " NeoBundleが未インストールであればgit cloneする
-    if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
-        echo "install NeoBundle..."
-        :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
-    endif
+	    " NeoBundleが未インストールであればgit cloneする
+	    if !isdirectory(expand("$VIM/~/.vim/bundle/neobundle.vim/"))
+	        echo "install NeoBundle..."
+	        :call system("git clone git://github.com/Shougo/neobundle.vim $VIM/~/.vim/bundle/neobundle.vim")
+	    endif
+	endif
+else
+	if has('vim_starting')
+	    " 初回起動時のみruntimepathにNeoBundleのパスを指定する
+	    set runtimepath+=~/.vim/bundle/neobundle.vim/
+
+	    " NeoBundleが未インストールであればgit cloneする
+	    if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
+	        echo "install NeoBundle..."
+	        :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
+	    endif
+	endif
 endif
 
 call neobundle#begin(expand('~/.vim/bundle/'))
@@ -864,4 +877,10 @@ endif
 nnoremap <silent> <C-up> <ESC><ESC>viw
 inoremap <silent> <C-up> <ESC><ESC>viw
 
-
+"------------------------------------------------
+"ウインドウ(最終行に記述しないと反映しなかった・・・なぜ？)
+"------------------------------------------------
+" ウインドウの幅
+set columns=100
+" ウインドウの高さ
+set lines=50
