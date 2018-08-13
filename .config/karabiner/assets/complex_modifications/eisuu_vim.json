@@ -1,0 +1,751 @@
+{
+    "title": "Vim eisuu. (Using japanese_eisuu key)",
+    "rules": [
+        {
+            "description": "Vim eisuu. CORE (Must be enable!!)",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "japanese_eisuu"
+                    },
+                    "to": [
+                        {
+                            "set_variable": {
+                                "name": "eisuu_key",
+                                "value": 1
+                            }
+                        }
+                    ],
+                    "to_if_alone": [
+                        {
+                            "key_code": "japanese_eisuu"
+                        }
+                    ],
+                    "to_after_key_up": [
+                        {
+                            "set_variable": {
+                                "name": "eisuu_key",
+                                "value": 0
+                            }
+                        },
+                        {
+                            "set_variable": {
+                                "name": "g_key",
+                                "value": 0
+                            }
+                        },
+                        {
+                            "set_variable": {
+                                "name": "d_key",
+                                "value": 0
+                            }
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": "Vim eisuu. move [h j k l]",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "h",
+                        "modifiers": {
+                            "optional": [ 
+                                "any"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "left_arrow"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "j",
+                        "modifiers": {
+                            "optional": [ 
+                                "any"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "down_arrow"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "k",
+                        "modifiers": {
+                            "optional": [ 
+                                "any"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "up_arrow"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "l",
+                        "modifiers": {
+                            "optional": [ 
+                                "any"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "right_arrow"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": "Vim eisuu. Option [space -> enter]",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "spacebar"
+                    },
+                    "to": [
+                        {
+                            "key_code": "return_or_enter"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": "Vim eisuu. move [0 ^ $]",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "0",
+                        "modifiers": {
+                            "optional": [ 
+                                "any"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "left_arrow",
+                            "modifiers": [
+                                "command"
+                            ]
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "equal_sign",
+                        "modifiers": {
+                            "optional": [ 
+                                "any"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "left_arrow",
+                            "modifiers": [
+                                "command"
+                            ]
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        },
+                        {
+                            "type": "variable_if",
+                            "name": "d_key",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "4",
+                        "modifiers": {
+                            "optional": [ 
+                                "any"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "right_arrow",
+                            "modifiers": [
+                                "command"
+                            ]
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        },
+                        {
+                            "type": "variable_if",
+                            "name": "d_key",
+                            "value": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": "Vim eisuu. page [u d b f gg G]",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "u",
+                        "modifiers": {
+                            "mandatory": [ 
+                                "control"
+                            ],
+                            "optional": [ 
+                                "any"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "up_arrow"
+                        },
+                        {
+                            "key_code": "up_arrow"
+                        },
+                        {
+                            "key_code": "up_arrow"
+                        },
+                        {
+                            "key_code": "up_arrow"
+                        },
+                        {
+                            "key_code": "up_arrow"
+                        },
+                        {
+                            "key_code": "up_arrow"
+                        },
+                        {
+                            "key_code": "up_arrow"
+                        },
+                        {
+                            "key_code": "up_arrow"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "d",
+                        "modifiers": {
+                            "mandatory": [ 
+                                "control"
+                            ],
+                            "optional": [ 
+                                "any"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "down_arrow"
+                        },
+                        {
+                            "key_code": "down_arrow"
+                        },
+                        {
+                            "key_code": "down_arrow"
+                        },
+                        {
+                            "key_code": "down_arrow"
+                        },
+                        {
+                            "key_code": "down_arrow"
+                        },
+                        {
+                            "key_code": "down_arrow"
+                        },
+                        {
+                            "key_code": "down_arrow"
+                        },
+                        {
+                            "key_code": "down_arrow"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "b",
+                        "modifiers": {
+                            "mandatory": [ 
+                                "control"
+                            ],
+                            "optional": [ 
+                                "shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "up_arrow",
+                            "modifiers": [
+                                "fn"
+                            ]
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "f",
+                        "modifiers": {
+                            "mandatory": [ 
+                                "control"
+                            ],
+                            "optional": [ 
+                                "shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "down_arrow",
+                            "modifiers": [
+                                "fn"
+                            ]
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "description": "<s-g>",
+                    "type": "basic",
+                    "from": {
+                        "key_code": "g",
+                        "modifiers": {
+                            "mandatory": [
+                                "shift"
+                            ],
+                            "optional": [ 
+                                "any"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "end"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        },
+                        {
+                            "type": "variable_if",
+                            "name": "g_key",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "description": "<gg>",
+                    "type": "basic",
+                    "from": {
+                        "key_code": "g"
+                    },
+                    "to": [
+                        {
+                            "key_code": "home"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        },
+                        {
+                            "type": "variable_if",
+                            "name": "g_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "description": "<g>",
+                    "type": "basic",
+                    "from": {
+                        "key_code": "g"
+                    },
+                    "to": [
+                        {
+                            "set_variable": {
+                                "name": "g_key",
+                                "value": 1
+                            }
+                        }
+                    ],
+                    "to_delayed_action": {
+                        "to_if_invoked": [
+                            {
+                                "set_variable": {
+                                    "name": "g_key",
+                                    "value": 0
+                                }
+                            },
+                            {
+                                "key_code": "end"
+                            }
+                        ],
+                        "to_if_canceled": [
+                            {
+                                "set_variable": {
+                                    "name": "g_key",
+                                    "value": 0
+                                }
+                            }
+                        ]
+                    },
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        },
+                        {
+                            "type": "variable_if",
+                            "name": "g_key",
+                            "value": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": "Vim eisuu. delete [x X d$ d^ dd]",
+            "manipulators": [
+                {
+                    "description": "<x>",
+                    "type": "basic",
+                    "from": {
+                        "key_code": "x"
+                    },
+                    "to": [
+                        {
+                            "key_code": "delete_or_backspace",
+                            "modifiers": [
+                                "fn"
+                            ]
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "description": "<s-x>",
+                    "type": "basic",
+                    "from": {
+                        "key_code": "x",
+                        "modifiers": {
+                            "mandatory": [
+                                "shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "delete_or_backspace"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "description": "<d$>",
+                    "type": "basic",
+                    "from": {
+                        "key_code": "4",
+                        "modifiers": [ 
+                            "left_shift"
+                        ]
+                    },
+                    "to": [
+                        {
+                            "key_code": "k",
+                            "modifiers":[
+                                "left_control"
+                            ]
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        },
+                        {
+                            "type": "variable_if",
+                            "name": "d_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "description": "<d4>",
+                    "type": "basic",
+                    "from": {
+                        "key_code": "5"
+                    },
+                    "to": [
+                        {
+                            "key_code": "k",
+                            "modifiers":[
+                                "left_control"
+                            ]
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        },
+                        {
+                            "type": "variable_if",
+                            "name": "d_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "description": "<d^>",
+                    "type": "basic",
+                    "from": {
+                        "key_code": "equal_sign"
+                    },
+                    "to": [
+                        {
+                            "key_code": "a",
+                            "modifiers": [
+                                "left_control", 
+                                "left_shift"
+                            ]
+                        },
+                        {
+                            "key_code": "delete_or_backspace"
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        },
+                        {
+                            "type": "variable_if",
+                            "name": "d_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "description": "<dd>",
+                    "type": "basic",
+                    "from": {
+                        "key_code": "d"
+                    },
+                    "to": [
+                        {
+                            "key_code":"left_arrow",
+                            "modifiers": [
+                               "left_command"
+                           ]
+                       },
+                       {
+                           "key_code":"down_arrow",
+                           "modifiers": [
+                               "left_shift",
+                               "left_option"
+                           ]
+                       },
+                       {
+                           "key_code":"delete_or_backspace"
+                       }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        },
+                        {
+                            "type": "variable_if",
+                            "name": "d_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "description": "<d>",
+                    "type": "basic",
+                    "from": {
+                        "key_code": "d"
+                    },
+                    "to": [
+                        {
+                            "set_variable": {
+                                "name": "d_key",
+                                "value": 1
+                            }
+                        }
+                    ],
+                    "to_delayed_action": {
+                        "to_if_invoked": [
+                            {
+                                "set_variable": {
+                                    "name": "d_key",
+                                    "value": 0
+                                }
+                            }
+                        ],
+                        "to_if_canceled": [
+                            {
+                                "set_variable": {
+                                    "name": "d_key",
+                                    "value": 0
+                                }
+                            }
+                        ]
+                    },
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        },
+                        {
+                            "type": "variable_if",
+                            "name": "d_key",
+                            "value": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
