@@ -636,10 +636,12 @@ endif
 "----------------------------------------------------------
 if neobundle#is_installed('ag.vim') && executable('ag')
 	" agが使える環境の場合
-	let g:ctrlp_user_command='ag %s --files-with-matches --nocolor --hidden -g ""' "
 	if has('win32')||has('win64')
-		let g:ctrlp_user_command+='--path-to-ignore'.$HOME.'/.agignore'
+		let g:ctrlp_user_command='ag %s --files-with-matches --nocolor --hidden -g ""'.' --path-to-ignore '.$HOME.'/.agignore'
+	else
+		let g:ctrlp_user_command='ag %s --files-with-matches --nocolor --hidden -g ""'
 	endif
+	
 	"let g:ctrlp_use_caching=0 " CtrlPのキャッシュを使わない
 	"let g:ctrlp_user_command = "ag --ignore-case --files-with-matches --nocolor --hidden -g '\\.(asm|bat|cs|cfg|config|cpp|hpp|c|h|fish|go|html|ini|js|java|json|lua|py|pl|rb|vbs|md|mac|txt|sh|bash|ps1|md|xml|csv|log|vim)$'"
 	"--asm --batch --csharp --cc --cpp --glsl --go --haskell --html --ini --java --js --json --log --lua --make --markdown --md --perl --php --python --ruby --shell --yaml --vim --xml --yaml'
