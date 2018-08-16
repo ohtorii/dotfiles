@@ -847,6 +847,59 @@
                     ]
                 } 
             ]
+        },
+        {
+            "description": "Vim eisuu. Undo/Redo [u c-r]",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "u"
+                    },
+                    "to": [
+                        {
+                            "key_code": "z",
+                            "modifiers": [
+                                "command"
+                            ] 
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "r",
+                        "modifiers": {
+                            "mandatory": [
+                                "control"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "z",
+                            "modifiers": [
+                                "command",
+                                "shift"
+                            ] 
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                } 
+            ]
         }
     ]
 }
