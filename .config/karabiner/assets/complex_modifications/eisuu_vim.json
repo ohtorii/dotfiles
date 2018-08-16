@@ -800,6 +800,53 @@
                     ]
                 }
             ]
+        },
+        {
+            "description": "Vim eisuu. Yank/Paste [y p]",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "y"
+                    },
+                    "to": [
+                        {
+                            "key_code": "c",
+                            "modifiers": [
+                                "command"
+                            ] 
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "p"
+                    },
+                    "to": [
+                        {
+                            "key_code": "v",
+                            "modifiers": [
+                                "command"
+                            ] 
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                } 
+            ]
         }
     ]
 }
