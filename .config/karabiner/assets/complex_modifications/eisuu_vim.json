@@ -579,7 +579,7 @@
             ]
         },
         {
-            "description": "Vim eisuu. delete [x X d$ d^ dd]",
+            "description": "Vim eisuu. delete [x X d$ d4 d^ dd]",
             "manipulators": [
                 {
                     "description": "<x>",
@@ -632,9 +632,11 @@
                     "type": "basic",
                     "from": {
                         "key_code": "4",
-                        "modifiers": [
-                            "shift"
-                        ]
+                        "modifiers": {
+                            "mandatory": [
+                                "shift"
+                            ]
+                        }
                     },
                     "to": [
                         {
@@ -661,7 +663,7 @@
                     "description": "<d4>",
                     "type": "basic",
                     "from": {
-                        "key_code": "5"
+                        "key_code": "4"
                     },
                     "to": [
                         {
