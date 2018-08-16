@@ -59,7 +59,11 @@ tags
 *.tiff
 *.tif
 *.xpm
+#Game developer.
+*.psd
 *.dds
+*.hdr
+*.pic
 
 ########################################################################
 #Document
@@ -95,6 +99,7 @@ tags
 *.meta
 *.obj
 *.iobj
+*.lib
 *.pch
 *.pdb
 *.ipdb
@@ -125,7 +130,7 @@ ipch/
 *.VC.db
 *.VC.VC.opendb
 # Visual Studio profiler
-*.psess
+*b.psess
 *.vsp
 *.vspx
 *.sap
