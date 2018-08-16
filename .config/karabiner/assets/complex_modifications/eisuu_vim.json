@@ -60,7 +60,7 @@
                     "from": {
                         "key_code": "h",
                         "modifiers": {
-                            "optional": [ 
+                            "optional": [
                                 "any"
                             ]
                         }
@@ -83,7 +83,7 @@
                     "from": {
                         "key_code": "j",
                         "modifiers": {
-                            "optional": [ 
+                            "optional": [
                                 "any"
                             ]
                         }
@@ -106,7 +106,7 @@
                     "from": {
                         "key_code": "k",
                         "modifiers": {
-                            "optional": [ 
+                            "optional": [
                                 "any"
                             ]
                         }
@@ -129,7 +129,7 @@
                     "from": {
                         "key_code": "l",
                         "modifiers": {
-                            "optional": [ 
+                            "optional": [
                                 "any"
                             ]
                         }
@@ -173,14 +173,40 @@
             ]
         },
         {
-            "description": "Vim eisuu. move [0 ^ $]",
+            "description": "Vim eisuu. Option [- -> _]",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "hyphen"
+                    },
+                    "to": [
+                        {
+                            "key_code": "international1",
+                            "modifiers": [
+                                "shift"
+                            ]
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": "Vim eisuu. move [0 ^ $ 4]",
             "manipulators": [
                 {
                     "type": "basic",
                     "from": {
                         "key_code": "0",
                         "modifiers": {
-                            "optional": [ 
+                            "optional": [
                                 "any"
                             ]
                         }
@@ -206,7 +232,7 @@
                     "from": {
                         "key_code": "equal_sign",
                         "modifiers": {
-                            "optional": [ 
+                            "optional": [
                                 "any"
                             ]
                         }
@@ -237,10 +263,36 @@
                     "from": {
                         "key_code": "4",
                         "modifiers": {
-                            "optional": [ 
-                                "any"
+                            "mandatory": [
+                                "shift"
                             ]
                         }
+                    },
+                    "to": [
+                        {
+                            "key_code": "right_arrow",
+                            "modifiers": [
+                                "command"
+                            ]
+                        }
+                    ],
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "eisuu_key",
+                            "value": 1
+                        },
+                        {
+                            "type": "variable_if",
+                            "name": "d_key",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "4"
                     },
                     "to": [
                         {
@@ -273,10 +325,10 @@
                     "from": {
                         "key_code": "u",
                         "modifiers": {
-                            "mandatory": [ 
+                            "mandatory": [
                                 "control"
                             ],
-                            "optional": [ 
+                            "optional": [
                                 "any"
                             ]
                         }
@@ -320,10 +372,10 @@
                     "from": {
                         "key_code": "d",
                         "modifiers": {
-                            "mandatory": [ 
+                            "mandatory": [
                                 "control"
                             ],
-                            "optional": [ 
+                            "optional": [
                                 "any"
                             ]
                         }
@@ -367,10 +419,10 @@
                     "from": {
                         "key_code": "b",
                         "modifiers": {
-                            "mandatory": [ 
+                            "mandatory": [
                                 "control"
                             ],
-                            "optional": [ 
+                            "optional": [
                                 "shift"
                             ]
                         }
@@ -396,10 +448,10 @@
                     "from": {
                         "key_code": "f",
                         "modifiers": {
-                            "mandatory": [ 
+                            "mandatory": [
                                 "control"
                             ],
-                            "optional": [ 
+                            "optional": [
                                 "shift"
                             ]
                         }
@@ -429,7 +481,7 @@
                             "mandatory": [
                                 "shift"
                             ],
-                            "optional": [ 
+                            "optional": [
                                 "any"
                             ]
                         }
@@ -580,14 +632,14 @@
                     "type": "basic",
                     "from": {
                         "key_code": "4",
-                        "modifiers": [ 
-                            "left_shift"
+                        "modifiers": [
+                            "shift"
                         ]
                     },
                     "to": [
                         {
                             "key_code": "k",
-                            "modifiers":[
+                            "modifiers": [
                                 "left_control"
                             ]
                         }
@@ -614,7 +666,7 @@
                     "to": [
                         {
                             "key_code": "k",
-                            "modifiers":[
+                            "modifiers": [
                                 "left_control"
                             ]
                         }
@@ -642,7 +694,7 @@
                         {
                             "key_code": "a",
                             "modifiers": [
-                                "left_control", 
+                                "left_control",
                                 "left_shift"
                             ]
                         },
@@ -671,21 +723,21 @@
                     },
                     "to": [
                         {
-                            "key_code":"left_arrow",
+                            "key_code": "left_arrow",
                             "modifiers": [
-                               "left_command"
-                           ]
-                       },
-                       {
-                           "key_code":"down_arrow",
-                           "modifiers": [
-                               "left_shift",
-                               "left_option"
-                           ]
-                       },
-                       {
-                           "key_code":"delete_or_backspace"
-                       }
+                                "left_command"
+                            ]
+                        },
+                        {
+                            "key_code": "down_arrow",
+                            "modifiers": [
+                                "left_shift",
+                                "left_option"
+                            ]
+                        },
+                        {
+                            "key_code": "delete_or_backspace"
+                        }
                     ],
                     "conditions": [
                         {
