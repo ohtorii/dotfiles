@@ -579,7 +579,7 @@
             ]
         },
         {
-            "description": "Vim eisuu. delete [x X d$ d4 d^ dd]",
+            "description": "Vim eisuu. delete [x X d4 d^ dd]",
             "manipulators": [
                 {
                     "description": "<x>",
