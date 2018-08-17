@@ -4,7 +4,9 @@
 DOT_FILES=(
 .agignore
 .vimrc
+.gvimrc
 .bash_profile
+.gitignore_global
 .lynxrc
 .config/fish/config.fish
 .config/fish/functions/peco_select_history.fish
