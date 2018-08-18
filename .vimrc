@@ -21,6 +21,10 @@ set autoread
 set hidden
 " 入力中のコマンドをステータスに表示する
 set showcmd
+" 自動的にquickfix-windowを開く
+autocmd QuickFixCmdPost *grep* cwindow
+" qでQuickFixを閉じる
+au FileType qf nnoremap <silent><buffer>q :quit<CR>
 
 " logging
 if has('win32')||has('win64')
@@ -415,15 +419,23 @@ NeoBundle 'Vimjas/vim-python-pep8-indent'
 "構文検査
 NeoBundle 'scrooloose/syntastic'
 
+"QuickRun
+NeoBundle 'thinca/vim-quickrun'
+
 "コメントアウト
 NeoBundle 'tyru/caw.vim'
 "Undo
 "neobundle "sjl/gundo.vim"
 
+"変更がある行を表示
+NeoBundle 'airblade/vim-gitgutter'
+
 "Unite
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/unite-outline'
 NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'Shougo/neomru.vim'
+NeoBundle 'Shougo/neoyank.vim'
 
 "----------------------------------------------------------
 call neobundle#end()
@@ -731,6 +743,22 @@ if neobundle#is_installed('syntastic')
 	let g:syntastic_sh_checkers = ['sh']
 endif
 
+"----------------------------------------------------------
+" [設定]vim-quickrun
+"----------------------------------------------------------
+if neobundle#is_installed('vim-quickrun')
+	let g:quickrun_config = {}
+	let g:quickrun_config['_'] = {
+	\ 'hook/close_quickfix/enable_hook_loaded' : 1,
+	\ 'hook/close_quickfix/enable_success' : 1,
+	\ 'hook/close_buffer/enable_failure' : 1,
+	\ 'hook/close_buffer/enable_empty_data' : 1,
+	\ 'outputter/buffer/split' : ":botright 8",
+	\ 'outputter' : 'multi:buffer:quickfix',
+	\}
+	"<C-c> でquickrunを停止
+	nnoremap <expr><silent> <C-c> quickrun#is_running() ? quickrun#sweep_sessions() : "\<C-c>"
+endif
 
 "----------------------------------------------------------
 " [設定]gundo
@@ -775,8 +803,9 @@ endif
 " [設定]tyru/caw.vim
 "----------------------------------------------------------
 if neobundle#is_installed('caw.vim')
-	nmap <C-e> <Plug>(caw:hatpos:toggle)
-	vmap <C-e> <Plug>(caw:hatpos:toggle)
+	imap <C-_> <Esc><Esc><Plug>(caw:hatpos:toggle)i
+	nmap <C-_> <Plug>(caw:hatpos:toggle)
+	vmap <C-_> <Plug>(caw:hatpos:toggle)
 endif
 
 "----------------------------------------------------------
@@ -786,6 +815,8 @@ if neobundle#is_installed('unite.vim')
 	" 大文字小文字を区別しな
 	let g:unite_enable_ignore_case = 1
 	let g:unite_enable_smart_case = 1
+	"ヒストリー/ヤンク機能を有効化
+	let g:unite_source_history_yank_enable =1
 	"リンクファイルをMRUメニューに表示する
 	"let g:neomru#follow_links = 1
 	"dotfilesを表示する
@@ -794,19 +825,40 @@ if neobundle#is_installed('unite.vim')
 	" ESCキーを2回押すと終了する
 	au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
 	au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:
-
-	" grep検索
-	nnoremap <silent> ,g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
-	" カーソル位置の単語をgrep検索
-	nnoremap <silent> ,cg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
-	" grep検索結果の再呼出
-	nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
+	
+	"prefix keyの設定
+	nmap <Space> [unite]
+	"スペースキーとaキーでカレントディレクトリを表示
+	nnoremap <silent> [unite]a :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+	"スペースキーとfキーでバッファと最近開いたファイル一覧を表示
+	nnoremap <silent> [unite]f :<C-u>Unite<Space>buffer file_mru<CR>
+	"スペースキーとdキーで最近開いたディレクトリを表示
+	nnoremap <silent> [unite]d :<C-u>Unite<Space>directory_mru<CR>
+	"スペースキーとbキーでバッファを表示
+	nnoremap <silent> [unite]b :<C-u>Unite<Space>buffer<CR>
+	"スペースキーとrキーでレジストリを表示
+	nnoremap <silent> [unite]r :<C-u>Unite<Space>register<CR>
+	"スペースキーとtキーでタブを表示
+	nnoremap <silent> [unite]t :<C-u>Unite<Space>tab<CR>
+	"スペースキーとhキーでヒストリ/ヤンクを表示
+	nnoremap <silent> [unite]h :<C-u>Unite<Space>history/yank<CR>
+	"スペースキーとoキーでoutline
+	nnoremap <silent> [unite]o :<C-u>Unite<Space>-vertical<Space>outline<CR>
+	"スペースキーとENTERキーでfile_rec:!
+	nnoremap <silent> [unite]<CR> :<C-u>Unite<Space>file_rec:!<CR>
+	"unite.vimを開いている間のキーマッピング
+	autocmd FileType unite call s:unite_my_settings()
+	function! s:unite_my_settings()"{{{
+		" ESCでuniteを終了
+		nmap <buffer> <ESC> <Plug>(unite_exit)
+	endfunction"}}}
 
 	" unite grep に ag(The Silver Searcher) を使う
 	if executable('ag')
 	  let g:unite_source_grep_command = 'ag'
 	  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
 	  let g:unite_source_grep_recursive_opt = ''
+
 	endif
 endif
 
@@ -865,27 +917,45 @@ if neobundle#is_installed('neocomplete.vim')
 	endif
 	" let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
 	let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
+	
+	"
+	" menu
+	"
+	let g:unite_source_menu_menus = {
+	\   "shortcut" : {
+	\       "description" : "sample unite-menu",
+	\       "command_candidates" : [
+	\           ["edit vimrc", "edit $MYVIMRC"],
+	\           ["edit gvimrc", "edit $MYGVIMRC"],
+	\           ["unite-file_mru", "Unite file_mru"],
+	\           ["unite-output:message", "Unite output:message"],
+	\       ],
+	\   },
+	\}
+
 endif
 
 
 "----------------------------------------------------------
 "秀丸エディタ互換
 "----------------------------------------------------------
-if neobundle#is_installed('unite')
-	"ファイル一覧を開く
-	nnoremap <silent> <C-o> :<C-u>Unite file<CR>
-	inoremap <silent> <C-o> <ESC><ESC>:<C-u>Unite file<CR>
+if 0
+	if neobundle#is_installed('unite.vim')
+		"ファイル一覧を開く
+		nnoremap <silent> <C-o> :<C-u>Unite file<CR>
+		inoremap <silent> <C-o> <ESC><ESC>:<C-u>Unite file<CR>
+	endif
+
+	if ! empty(neobundle#get("unite-outline"))
+		"ウインドウ右側に表示する
+		nnoremap <silent> <F4> :<C-u>Unite -vertical outline<CR>
+	endif
+
+
+	"単語選択
+	nnoremap <silent> <C-up> <ESC><ESC>viw
+	inoremap <silent> <C-up> <ESC><ESC>viw
 endif
-
-if ! empty(neobundle#get("unite-outline"))
-	"ウインドウ右側に表示する
-	nnoremap <silent> <F4> :<C-u>Unite -vertical outline<CR>
-endif
-
-
-"単語選択
-nnoremap <silent> <C-up> <ESC><ESC>viw
-inoremap <silent> <C-up> <ESC><ESC>viw
 
 "------------------------------------------------
 "ウインドウ(最終行に記述しないと反映しなかった・・・なぜ？)
