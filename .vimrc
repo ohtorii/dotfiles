@@ -662,7 +662,9 @@ endif
 "----------------------------------------------------------
 " [設定]psearch.vim
 "----------------------------------------------------------
-
+if neobundle#is_installed('psearch.vim')
+	"nmap * :PSearchw<CR>
+endif
 
 "----------------------------------------------------------
 " [設定]nerdtree
@@ -830,22 +832,15 @@ if neobundle#is_installed('unite.vim')
 	nmap <Space> [unite]
 	"スペースキーとaキーでカレントディレクトリを表示
 	nnoremap <silent> [unite]a :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-	"スペースキーとfキーでバッファと最近開いたファイル一覧を表示
 	nnoremap <silent> [unite]f :<C-u>Unite<Space>buffer file_mru<CR>
-	"スペースキーとdキーで最近開いたディレクトリを表示
 	nnoremap <silent> [unite]d :<C-u>Unite<Space>directory_mru<CR>
-	"スペースキーとbキーでバッファを表示
 	nnoremap <silent> [unite]b :<C-u>Unite<Space>buffer<CR>
-	"スペースキーとrキーでレジストリを表示
 	nnoremap <silent> [unite]r :<C-u>Unite<Space>register<CR>
-	"スペースキーとtキーでタブを表示
 	nnoremap <silent> [unite]t :<C-u>Unite<Space>tab<CR>
-	"スペースキーとhキーでヒストリ/ヤンクを表示
 	nnoremap <silent> [unite]h :<C-u>Unite<Space>history/yank<CR>
-	"スペースキーとoキーでoutline
 	nnoremap <silent> [unite]o :<C-u>Unite<Space>-vertical<Space>outline<CR>
-	"スペースキーとENTERキーでfile_rec:!
 	nnoremap <silent> [unite]<CR> :<C-u>Unite<Space>file_rec:!<CR>
+	nnoremap <silent> [unite]m :<C-u>Unite<Space>menu<CR>
 	"unite.vimを開いている間のキーマッピング
 	autocmd FileType unite call s:unite_my_settings()
 	function! s:unite_my_settings()"{{{
@@ -922,12 +917,23 @@ if neobundle#is_installed('neocomplete.vim')
 	" menu
 	"
 	let g:unite_source_menu_menus = {
-	\   "shortcut" : {
-	\       "description" : "sample unite-menu",
+	\   "0_file" : {
+	\       "description" : "file",
 	\       "command_candidates" : [
 	\           ["edit vimrc", "edit $MYVIMRC"],
 	\           ["edit gvimrc", "edit $MYGVIMRC"],
 	\           ["unite-file_mru", "Unite file_mru"],
+	\		],
+	\	},
+	\	"1_search":{
+	\		"description":"search",
+	\		"command_candidates" : [
+	\           ["psearchw", "PSearchw"],
+	\       ],
+	\   },
+	\	"99_debug":{
+	\		"description":"debug",
+	\		"command_candidates" : [
 	\           ["unite-output:message", "Unite output:message"],
 	\       ],
 	\   },
