@@ -69,9 +69,7 @@ set history=1000	" 保存するコマンド履歴の数
 
 
 "------------------------------------------------
-" 見た目（ウインドウの中身に関する設定）
-"------------------------------------------------
-" 行番号を表示
+" 見た目（ウインドウの中身に関する設定） "------------------------------------------------ " 行番号を表示
 set number
 "シンタックスハイライト
 syntax on
@@ -112,7 +110,7 @@ highlight CursorLine term=none cterm=none ctermfg=none ctermbg=darkgray
 " Tab文字系
 "-------------------------------------------------
 " 不可視文字を可視化(タブが「▸-」と表示される)
-set list listchars=tab:—→,trail:-,eol:↲
+set list listchars=tab:→\ ,trail:-,eol:↲
 "set expandtab " タブ入力を複数の空白入力に置き換える
 set tabstop=4 " 画面上でタブ文字が占める幅
 set softtabstop=4 " 連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
@@ -147,9 +145,7 @@ nnoremap k gk
 nnoremap <down> gj
 nnoremap <up> gk
 
-"-----------------------------------------------
-"ペースト設定
-"-----------------------------------------------
+"----------------------------------------------- "ペースト設定 "-----------------------------------------------
 set clipboard+=unnamed
 
 "クリップボードから普通にペーストすると自動インデントが効いて下に行くほど右にずれていきますが、
@@ -171,6 +167,13 @@ endif
 "-----------------------------------------------
 "ショートカットキー
 "-----------------------------------------------
+if 1
+	" Shift+hjklで移動量を大きく
+	noremap H 3h
+	noremap J 3j
+	noremap K 3k
+	noremap L 3l
+endif
 
 "メタキーを使うための設定
 "http://blog.remora.cx/2012/07/using-alt-as-meta-in-vim.html
@@ -194,43 +197,57 @@ endfunction
 
 "ESC押しづらいため
 "inoremap <C-c> <Esc>
+if 1
+	"ウインドウ上下分割
+	"call DefineKey_M('h')
+	"noremap <M-h> :<C-u>sp<CR>
+	"inoremap <M-h> <ESC>:<C-u>sp<CR>
 
-"ウインドウ上下分割
-call DefineKey_M('h')
-noremap <M-h> :<C-u>sp<CR>
-inoremap <M-h> <ESC>:<C-u>sp<CR>
+	"ウインドウ左右分割
+	"call DefineKey_M('v')
+	"noremap <M-v> :<C-u>vs<CR>
+	"noremap <M-v> <ESC>:<C-u>vs<CR>
 
-"ウインドウ左右分割
-call DefineKey_M('v')
-noremap <M-v> :<C-u>vs<CR>
-noremap <M-v> <ESC>:<C-u>vs<CR>
+	"ウインドウとタブのクローズ
+	call DefineKey_M('q')
+	noremap <M-q> :<C-u>q<CR>
+	noremap <M-q> <ESC>:<C-u>q<CR>
 
-"ウインドウとタブのクローズ
-call DefineKey_M('q')
-noremap <M-q> :<C-u>q<CR>
-noremap <M-q> <ESC>:<C-u>q<CR>
+	"分割したウインドウ内を上下左右移動
+	nnoremap <M-right> <C-w>l
+	nnoremap <M-down>  <C-w>j
+	nnoremap <M-up>    <C-w>k
+	nnoremap <M-left>  <C-w>h
+	inoremap <M-right> <ESC><C-w>l
+	inoremap <M-down>  <ESC><C-w>j
+	inoremap <M-up>    <ESC><C-w>k
+	inoremap <M-left>  <ESC><C-w>h
 
-"分割したウインドウ内を上下左右移動
-nnoremap <M-right> <C-w>l
-nnoremap <M-down>  <C-w>j
-nnoremap <M-up>    <C-w>k
-nnoremap <M-left>  <C-w>h
-inoremap <M-right> <ESC><C-w>l
-inoremap <M-down>  <ESC><C-w>j
-inoremap <M-up>    <ESC><C-w>k
-inoremap <M-left>  <ESC><C-w>h
+	call DefineKey_M('h')
+	call DefineKey_M('j')
+	call DefineKey_M('k')
+	call DefineKey_M('l')
+	nnoremap <M-l> <C-w>l
+	nnoremap <M-j> <C-w>j
+	nnoremap <M-k> <C-w>k
+	nnoremap <M-h> <C-w>h
+	inoremap <M-l> <ESC><C-w>l
+	inoremap <M-j> <ESC><C-w>j
+	inoremap <M-k> <ESC><C-w>k
+	inoremap <M-h> <ESC><C-w>h
 
-"タブ左右移動
-call DefineKey_M('_')
-nnoremap <M-_> gt
-call DefineKey_M('/')
-nnoremap <M-/> gT
-inoremap <M-_> <ESC>gt
-inoremap <M-/> <ESC>gT
 
-"新規タブ
-nnoremap <C-n> :<C-u>tabnew<CR>
+	"タブ左右移動
+	"call DefineKey_M('_')
+	"nnoremap <M-_> gt
+	"call DefineKey_M('/')
+	"nnoremap <M-/> gT
+	"inoremap <M-_> <ESC>gt
+	"inoremap <M-/> <ESC>gT
 
+	"新規タブ
+	"nnoremap <C-n> :<C-u>tabnew<CR>
+endif
 
 " quote and bracket {{{
 "inoremap {} {}<Left>
