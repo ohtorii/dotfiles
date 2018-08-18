@@ -371,6 +371,8 @@ NeoBundle 'bronson/vim-trailing-whitespace'
 
 " インデントの可視化
 NeoBundle 'Yggdroot/indentLine'
+" tab->space / space->tab
+NeoBundle 'rhlobo/vim-super-retab'
 
 " 対応する括弧を虹色で表示する
 NeoBundle 'luochen1990/rainbow'
@@ -925,7 +927,14 @@ if neobundle#is_installed('neocomplete.vim')
 	\           ["unite-file_mru", "Unite file_mru"],
 	\		],
 	\	},
-	\	"1_search":{
+	\	"1_edit":{
+	\		"description":"edit",
+	\		"command_candidates" : [
+	\           ["tab2space", "Tab2Space"],
+	\           ["space2tab", "Space2Tab"],
+	\       ],
+	\   },
+	\	"2_search":{
 	\		"description":"search",
 	\		"command_candidates" : [
 	\           ["psearchw", "PSearchw"],
