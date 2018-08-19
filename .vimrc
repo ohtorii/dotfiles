@@ -455,7 +455,7 @@ NeoBundle 'Shougo/unite-outline'
 NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/neoyank.vim'
-
+NeoBundle 'h1mesuke/vim-alignta'
 "----------------------------------------------------------
 call neobundle#end()
 
@@ -846,11 +846,13 @@ if neobundle#is_installed('unite.vim')
 	" ESCキーを2回押すと終了する
 	au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
 	au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:
-	
+
 	"prefix keyの設定
 	nmap <Space> [unite]
-	"スペースキーとaキーでカレントディレクトリを表示
-	nnoremap <silent> [unite]a :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+	xmap <Space> [unite]
+
+	"カレントディレクトリを表示
+	nnoremap <silent> [unite]c :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 	nnoremap <silent> [unite]f :<C-u>Unite<Space>buffer file_mru<CR>
 	nnoremap <silent> [unite]d :<C-u>Unite<Space>directory_mru<CR>
 	nnoremap <silent> [unite]b :<C-u>Unite<Space>buffer<CR>
@@ -860,6 +862,10 @@ if neobundle#is_installed('unite.vim')
 	nnoremap <silent> [unite]o :<C-u>Unite<Space>-vertical<Space>outline<CR>
 	nnoremap <silent> [unite]<CR> :<C-u>Unite<Space>file_rec:!<CR>
 	nnoremap <silent> [unite]m :<C-u>Unite<Space>menu<CR>
+	"aliginta
+	nnoremap <silent> [unite]a :<C-u>Unite alignta:options<CR>
+	xnoremap <silent> [unite]a :<C-u>Unite alignta:arguments<CR>
+
 	"unite.vimを開いている間のキーマッピング
 	autocmd FileType unite call s:unite_my_settings()
 	function! s:unite_my_settings()"{{{
@@ -869,11 +875,46 @@ if neobundle#is_installed('unite.vim')
 
 	" unite grep に ag(The Silver Searcher) を使う
 	if executable('ag')
-	  let g:unite_source_grep_command = 'ag'
-	  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-	  let g:unite_source_grep_recursive_opt = ''
-
+		let g:unite_source_grep_command = 'ag'
+		let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+		let g:unite_source_grep_recursive_opt = ''
 	endif
+
+	"
+	" menu
+	"
+	let g:unite_source_menu_menus = {
+	\   "0_file" : {
+	\       "description" : "file",
+	\       "command_candidates" : [
+	\           ["edit vimrc", "edit $MYVIMRC"],
+	\           ["edit gvimrc", "edit $MYGVIMRC"],
+	\           ["unite-file_mru", "Unite file_mru"],
+	\		],
+	\	},
+	\	"1_edit":{
+	\		"description":"edit",
+	\		"command_candidates" : [
+	\           ["tab -> space", "Tab2Space"],
+	\           ["space -> tab", "Space2Tab"],
+	\           ["remove trailing whitespace", "FixWhitespace"],
+	\       ],
+	\   },
+	\	"2_search":{
+	\		"description":"search",
+	\		"command_candidates" : [
+	\           ["psearchw", "PSearchw"],
+	\       ],
+	\   },
+	\	"99_debug":{
+	\		"description":"debug",
+	\		"command_candidates" : [
+	\           ["unite-output:message", "Unite output:message"],
+	\       ],
+	\   },
+	\}
+
+
 endif
 
 
@@ -931,42 +972,42 @@ if neobundle#is_installed('neocomplete.vim')
 	endif
 	" let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
 	let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
-	
-	"
-	" menu
-	"
-	let g:unite_source_menu_menus = {
-	\   "0_file" : {
-	\       "description" : "file",
-	\       "command_candidates" : [
-	\           ["edit vimrc", "edit $MYVIMRC"],
-	\           ["edit gvimrc", "edit $MYGVIMRC"],
-	\           ["unite-file_mru", "Unite file_mru"],
-	\		],
-	\	},
-	\	"1_edit":{
-	\		"description":"edit",
-	\		"command_candidates" : [
-	\           ["tab2space", "Tab2Space"],
-	\           ["space2tab", "Space2Tab"],
-	\       ],
-	\   },
-	\	"2_search":{
-	\		"description":"search",
-	\		"command_candidates" : [
-	\           ["psearchw", "PSearchw"],
-	\       ],
-	\   },
-	\	"99_debug":{
-	\		"description":"debug",
-	\		"command_candidates" : [
-	\           ["unite-output:message", "Unite output:message"],
-	\       ],
-	\   },
-	\}
-
 endif
 
+"----------------------------------------------------------
+" [設定]h1mesuke/vim-alignta
+"----------------------------------------------------------
+if neobundle#is_installed('vim-alignta')
+	let g:unite_source_alignta_preset_arguments = [
+	      \ ["Align at '='", '=>\='],
+	      \ ["Align at ':'", '01 :'],
+	      \ ["Align at '|'", '|'   ],
+	      \ ["Align at ')'", '0 )' ],
+	      \ ["Align at ']'", '0 ]' ],
+	      \ ["Align at '}'", '}'   ],
+	      \ ["Align at ','", ','   ],
+	      \]
+
+	let s:comment_leadings = '^\s*\("\|#\|/\*\|//\|<!--\)'
+	let g:unite_source_alignta_preset_options = [
+	      \ ["Justify Left",      '<<' ],
+	      \ ["Justify Center",    '||' ],
+	      \ ["Justify Right",     '>>' ],
+	      \ ["Justify None",      '==' ],
+	      \ ["Shift Left",        '<-' ],
+	      \ ["Shift Right",       '->' ],
+	      \ ["Shift Left  [Tab]", '<--'],
+	      \ ["Shift Right [Tab]", '-->'],
+	      \ ["Margin 0:0",        '0'  ],
+	      \ ["Margin 0:1",        '01' ],
+	      \ ["Margin 1:0",        '10' ],
+	      \ ["Margin 1:1",        '1'  ],
+	      \
+	      \ 'v/' . s:comment_leadings,
+	      \ 'g/' . s:comment_leadings,
+	      \]
+	unlet s:comment_leadings
+endif
 
 "----------------------------------------------------------
 "秀丸エディタ互換
