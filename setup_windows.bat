@@ -9,3 +9,5 @@ echo agignore
 mklink /H "%HOME%\.agignore" "%~dp0.agignore"
 echo .vimrc
 mklink /H "%HOME%\_vimrc" "%~dp0.vimrc"
+echo .gvimrc
+mklink /H "%HOME%\_gvimrc" "%~dp0.gvimrc"
