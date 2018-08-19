@@ -64,8 +64,19 @@ set laststatus=2
 "コマンド補完
 "---------
 set wildmenu		" コマンドモードの補完
+set wildmode=longest:full,full
+set nocompatible
 set history=1000	" 保存するコマンド履歴の数
-
+if 1
+	" コマンドラインモードでbash同様のキー操作を行う
+	cnoremap <C-b> <Left>
+	cnoremap <C-f> <Right>
+	cnoremap <C-n> <Down>
+	cnoremap <C-p> <Up>
+	cnoremap <C-a> <Home>
+	cnoremap <C-e> <End>
+	cnoremap <C-d> <Del>
+endif
 
 
 "------------------------------------------------
