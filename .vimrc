@@ -718,10 +718,12 @@ if neobundle#is_installed('nerdtree')
 
 	function! StartUp()
 		"memo:初期状態でNERDTreeにフォーカスがあるため編集したいファイルに移動する必要あり。
-		NERDTree
-		" if 0 == argc()
-		" 	NERDTree
-		" end
+		" NERDTree
+		" normal! <c-w><c-w>
+
+		if 0 == argc()
+			NERDTree
+		end
 	endfunction
 	autocmd VimEnter * call StartUp()
 
