@@ -716,7 +716,7 @@ if neobundle#is_installed('nerdtree')
 	" コマンドラインでファイル指定されていないときはNerdtreeを開く。
 	" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
-	function! StartUp()
+	function! s:StartUp()
 		"memo:初期状態でNERDTreeにフォーカスがあるため編集したいファイルに移動する必要あり。
 		" NERDTree
 		" normal! <c-w><c-w>
@@ -725,7 +725,7 @@ if neobundle#is_installed('nerdtree')
 			NERDTree
 		end
 	endfunction
-	autocmd VimEnter * call StartUp()
+	autocmd VimEnter * call s:StartUp()
 
 	"他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
 	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -1127,3 +1127,12 @@ endif
 set columns=100
 " ウインドウの高さ
 set lines=50
+
+"------------------------------------------------
+"開発環境ごとのプライベートな設定を取り込む
+"------------------------------------------------
+let s:vimrc_private=expand('$HOME/.vimrc_private')
+if filereadable(s:vimrc_private)
+   execute 'source' s:vimrc_private
+endif
+unlet s:vimrc_private
