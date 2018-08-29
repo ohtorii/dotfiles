@@ -21,6 +21,8 @@ set autoread
 set hidden
 " 入力中のコマンドをステータスに表示する
 set showcmd
+"開いているディレクトリへ自動的に移動する
+set autochdir
 " 自動的にquickfix-windowを開く
 autocmd QuickFixCmdPost *grep* cwindow
 " qでQuickFixを閉じる
@@ -80,7 +82,9 @@ endif
 
 
 "------------------------------------------------
-" 見た目（ウインドウの中身に関する設定） "------------------------------------------------ " 行番号を表示
+" 見た目（ウインドウの中身に関する設定） 
+"------------------------------------------------ 
+" 行番号を表示
 set number
 "シンタックスハイライト
 syntax on
@@ -428,7 +432,7 @@ NeoBundle 'osyo-manga/vim-over'
 NeoBundle 'osyo-manga/vim-brightest'
 
 "サイドバーにファイル一覧を表示
-"NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'scrooloose/nerdtree'
 
 "選択範囲を広げる
 NeoBundle 'terryma/vim-expand-region'
@@ -699,6 +703,72 @@ endif
 "----------------------------------------------------------
 " [設定]nerdtree
 "----------------------------------------------------------
+if neobundle#is_installed('nerdtree')
+	"<c-t>でnerdtreeをオンオフ。いつでもどこでも。
+	"map <silent> <c-t>   :nerdtreetoggle<cr>
+	"lmap <silent> <c-t>  :nerdtreetoggle<cr>
+	nmap <silent> <C-t>      :NERDTreeToggle<CR>
+	vmap <silent> <C-t> <Esc>:NERDTreeToggle<CR>
+	omap <silent> <C-t>      :NERDTreeToggle<CR>
+	imap <silent> <C-t> <Esc>:NERDTreeToggle<CR>
+	cmap <silent> <C-t> <C-u>:NERDTreeToggle<CR>
+
+	" コマンドラインでファイル指定されていないときはNerdtreeを開く。
+	" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+	function! StartUp()
+		"memo:初期状態でNERDTreeにフォーカスがあるため編集したいファイルに移動する必要あり。
+		NERDTree
+		" if 0 == argc()
+		" 	NERDTree
+		" end
+	endfunction
+	autocmd VimEnter * call StartUp()
+
+	"他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
+	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+	"ファイルオープン後の動作
+	"0 : そのままNERDTreeを開いておく。
+	"1 : NERDTreeを閉じる。
+	let g:NERDTreeQuitOnOpen=0
+
+	"NERDTreeIgnore	無視するファイルを設定する。
+	"'\.vim$'ならばfugitive.vimなどのファイル名が表示されない。
+	"\ エスケープ記号
+	"$ ファイル名の最後
+	"f コマンドの設定値
+	let g:NERDTreeIgnore=['\.clean$', '\.swp$', '\.bak$', '\~$', "\.DS_Store$", "tags$", ]
+
+	"NERDTreeShowHidden	隠しファイルを表示するか？
+	"I コマンドの設定値
+	"0 : 隠しファイルを表示しない。
+	"1 : 隠しファイルを表示する。
+	let g:NERDTreeShowHidden=1
+
+	"ブックマークリストの表示。
+	"0 : ブックマークリストを最初から表示しない。
+	"1 : ブックマークリストを最初から表示する。
+	let g:NERDTreeShowBookmarks=1
+
+	"NERDTreeのツリーを開く場所、左側か、右側か。
+	"let g:NERDTreeWinPos="left"
+	let g:NERDTreeWinPos="right"
+
+	"NERDTreeのツリーの幅
+	"Default: 31.
+	"let g:NERDTreeWinSize=45
+
+
+	"ブックマークや、ヘルプのショートカットをメニューに表示する。
+	"0 表示する
+	"1 表示しない
+	"Values: 0 or 1.
+	"Default: 1.
+	let g:NERDTreeMinimalUI=0
+	" let g:NERDTreeMinimalUI=1
+
+endif
 
 "----------------------------------------------------------
 " [設定]vim-expand-region
@@ -890,7 +960,11 @@ if neobundle#is_installed('unite.vim')
 		let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
 		let g:unite_source_grep_recursive_opt = ''
 	endif
-
+	
+	function UniteMenuOverCommand()
+		OverCommandLine
+		"<CR>%s/<C-r><C-w>//g<Left><Left>
+	endfunction
 	"
 	" menu
 	"
@@ -900,6 +974,7 @@ if neobundle#is_installed('unite.vim')
 	\       "command_candidates" : [
 	\           ["edit vimrc", "edit $MYVIMRC"],
 	\           ["edit gvimrc", "edit $MYGVIMRC"],
+	\			["Toggle NERDTree", "NERDTreeToggle"],
 	\           ["unite-file_mru", "Unite file_mru"],
 	\		],
 	\	},
@@ -911,10 +986,12 @@ if neobundle#is_installed('unite.vim')
 	\           ["remove trailing whitespace", "FixWhitespace"],
 	\       ],
 	\   },
-	\	"2_search":{
-	\		"description":"search",
+	\	"2_search/replace":{
+	\		"description":"search/replace",
 	\		"command_candidates" : [
 	\           ["psearchw", "PSearchw"],
+	\			["OverCommandLine","OverCommandLine"],
+	\			["カーソル下の単語をハイライト置換","UniteMenuOverCommand("]
 	\       ],
 	\   },
 	\	"99_debug":{
