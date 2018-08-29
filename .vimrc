@@ -78,6 +78,12 @@ if 1
 	cnoremap <C-a> <Home>
 	cnoremap <C-e> <End>
 	cnoremap <C-d> <Del>
+	" emacs
+	inoremap <C-a> <C-o>^
+	inoremap <C-e> <C-o>$
+	inoremap <C-f> <C-o>w
+	inoremap <C-b> <C-o>b
+	inoremap <C-d> <C-o>x
 endif
 
 
@@ -962,11 +968,12 @@ if neobundle#is_installed('unite.vim')
 		let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
 		let g:unite_source_grep_recursive_opt = ''
 	endif
-	
-	function UniteMenuOverCommand()
-		OverCommandLine
-		"<CR>%s/<C-r><C-w>//g<Left><Left>
-	endfunction
+
+	"絶対に使われないショートカットキーに割り当てる
+	"memo:よい方法ではないので将来的に見直したい
+	nnoremap <c-s-overcmdline> <ESC><ESC>:OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
+	inoremap <c-s-overcmdline> <ESC><ESC>:OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
+
 	"
 	" menu
 	"
@@ -992,8 +999,7 @@ if neobundle#is_installed('unite.vim')
 	\		"description":"search/replace",
 	\		"command_candidates" : [
 	\           ["psearchw", "PSearchw"],
-	\			["OverCommandLine","OverCommandLine"],
-	\			["カーソル下の単語をハイライト置換","UniteMenuOverCommand("]
+	\			["OverCommandLine","call feedkeys('\<c-s-overcmdline>')"],
 	\       ],
 	\   },
 	\	"99_debug":{
@@ -1045,7 +1051,9 @@ if neobundle#is_installed('neocomplete.vim')
 	inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 	inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 	inoremap <expr><C-y>  neocomplete#close_popup()
-	inoremap <expr><C-e>  neocomplete#cancel_popup()
+
+	"insert-mode のc-eと重複するためコメントアウとした。
+	"inoremap <expr><C-e>  neocomplete#cancel_popup()
 
 	" Close popup by <Space>.
 	inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
