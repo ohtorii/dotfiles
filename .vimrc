@@ -9,7 +9,17 @@ scriptencoding utf-8
 set fileencoding=utf-8 " 保存時の文字コード
 set fileencodings=ucs-boms,utf-8,euc-jp,cp932 " 読み込み時の文字コードの自動判別. 左側が優先される
 set fileformats=unix,dos,mac " 改行コードの自動判別. 左側が優先される
-"set ambiwidth=double " □や○文字が崩れる問題を解決
+
+if has('win32')||has('win64')
+	"set ambiwidth=double " □や○文字が崩れる問題を解決
+
+	"画面最後の行をできる限り表示する。
+	set display+=lastline
+
+	"mM=日本語(マルチバイト文字)行の連結時には空白を入力しない。"
+	""j=コメント行処理
+	set formatoptions+=mMj
+endif
 
 " バックアップファイルを作らない
 set nobackup
@@ -27,6 +37,14 @@ set autochdir
 autocmd QuickFixCmdPost *grep* cwindow
 " qでQuickFixを閉じる
 au FileType qf nnoremap <silent><buffer>q :quit<CR>
+
+"---------
+" undoファイル(.{ファイル名}.un~)
+"---------
+" 無効化する
+set noundofile
+" undoファイルを一箇所にまとめる
+"set undodir=D:/home/koron/var/vim/undo
 
 " logging
 if has('win32')||has('win64')
@@ -367,7 +385,6 @@ if has('win32')||has('win64')
 	if has('vim_starting')
 	    " 初回起動時のみruntimepathにNeoBundleのパスを指定する(絶対パス)
 	    set runtimepath+=$VIM/~/.vim/bundle/neobundle.vim/
-
 	    " NeoBundleが未インストールであればgit cloneする
 	    if !isdirectory(expand("$VIM/~/.vim/bundle/neobundle.vim/"))
 	        echo "install NeoBundle..."
@@ -403,6 +420,8 @@ NeoBundle 'itchyny/lightline.vim'
 "ステータスラインの表示内容強化
 "NeoBundle 'vim-airline/vim-airline'
 "NeoBundle 'vim-airline/vim-airline-themes'
+
+NeoBundle 'vim-jp/vital.vim'
 
 " 末尾の全角と半角の空白文字を赤くハイライト(FixWhitespace コマンド)
 NeoBundle 'bronson/vim-trailing-whitespace'
