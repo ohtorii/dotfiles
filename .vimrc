@@ -497,6 +497,9 @@ NeoBundle 'tyru/caw.vim'
 "Undo
 "neobundle "sjl/gundo.vim"
 
+"一部のsvnコマンドを実行して結果を表示するunite-source (動かないためコメントアウト)
+"NeoBundle 'kmnk/vim-unite-svn'
+
 "変更がある行を表示
 NeoBundle 'airblade/vim-gitgutter'
 
