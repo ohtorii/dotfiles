@@ -16,11 +16,11 @@ if has('win32')||has('win64')
 	
 	"grep設定
 	if executable('C:\Program Files\Git\usr\bin\grep.exe')
-		set grepprg=C:/Program\ Files/Git/usr/bin/grep.exe\ -n
-		let $PATH .=';C:\Program Files\Git\usr\bin'
+		set grepprg=C:/Program\ Files/Git/usr/bin/grep.exe\ -n\ --exclude-dir=.svn\ --exclude-dir=.git\ --exclude-dir=__pycache__
+		let $PATH='C:\Program Files\Git\usr\bin;'.$PATH
 	elseif executable('C:\tools\msys64\usr\bin\grep.exe')
-		set grepprg=C:\tools\msys64\usr\bingrep.exe\ -n
-		let $PATH .=';C:\tools\msys64\usr\bin'
+		set grepprg=C:\tools\msys64\usr\bingrep.exe\ -n\ --exclude-dir=.svn\ --exclude-dir=.git\ --exclude-dir=__pycache__
+		let $PATH='C:\tools\msys64\usr\bin;'.$PATH
 	endif
 endif
 
@@ -983,18 +983,47 @@ if neobundle#is_installed('unite.vim')
 	nmap <Space> [unite]
 	xmap <Space> [unite]
 
-	"カレントディレクトリを表示
-	nnoremap <silent> [unite]c :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-	nnoremap <silent> [unite]f :<C-u>Unite<Space>buffer file_mru<CR>
-	nnoremap <silent> [unite]d :<C-u>Unite<Space>directory_mru<CR>
+	nnoremap <silent> [unite]m :<C-u>Unite<Space>menu<CR>
 	nnoremap <silent> [unite]b :<C-u>Unite<Space>buffer<CR>
 	nnoremap <silent> [unite]r :<C-u>Unite<Space>register<CR>
 	nnoremap <silent> [unite]t :<C-u>Unite<Space>tab<CR>
 	nnoremap <silent> [unite]h :<C-u>Unite<Space>history/yank<CR>
 	nnoremap <silent> [unite]o :<C-u>Unite<Space>-vertical<Space>outline<CR>
-	nnoremap <silent> [unite]<CR> :<C-u>Unite<Space>file_rec:!<CR>
-	nnoremap <silent> [unite]m :<C-u>Unite<Space>menu<CR>
+	nnoremap <silent> [unite]d :<C-u>Unite<Space>directory_mru<CR>
+	
+	"grep {{{
+	"-------------------------------------------------------------------
+	"カレントディレクトリ以下に対して
+	nnoremap <silent> [unite]gc :<C-U>Unite<Space>grep:. -buffer-name=search-buffer<CR>
+	"カレントディレクトリ以下に対して(カーソル以下の単語を検索する)
+	nnoremap <silent> [unite]gC :<C-U>Unite<Space>grep:. -buffer-name=search-buffer<CR><C-R><C-W><CR>
+	"(使い道がない)カレントバッファのディレクトリ以下に対してgrep
+    "nnoremap <silent> [unite]g. :<C-U>execute "Unite grep:".escape(expand('%:p:h'), ' ')<CR>
+	"(動かない)全バッファに対して
+	"nnoremap <silent> [unite]gB :<C-U>Unite<Space>grep:$buffers<CR>
+	"プロジェクト内のファイルに対して
+    nnoremap <silent> [unite]gp :<C-U>:Unite<Space>grep:!<CR>
+	"}}}
 
+	"ファイル検索 {{{
+	"-------------------------------------------------------------------
+	"カレントディレクトリを表示
+	nnoremap <silent> [unite]fc :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+	nnoremap <silent> [unite]fm :<C-u>Unite<Space>buffer file_mru<CR>
+	"カレントディレクトリ以下に対して
+	nnoremap <silent> [unite]fC :<C-u>Unite<Space>file_rec<CR>
+	"プロジェクト以下に対して
+	nnoremap <silent> [unite]fp :<C-u>Unite<Space>file_rec:!<CR>
+	"}}}
+	
+	"Bookmark {{{
+	"-------------------------------------------------------------------
+	"ブックマーク一覧
+	"nnoremap <silent> [unite]c :<C-u>Unite bookmark<CR>
+	"ブックマークに追加
+	"nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
+	"}}}
+	
 	"aliginta
 	nnoremap <silent> [unite]a :<C-u>Unite alignta:options<CR>
 	xnoremap <silent> [unite]a :<C-u>Unite alignta:arguments<CR>
