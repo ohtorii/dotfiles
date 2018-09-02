@@ -728,6 +728,16 @@ endif
 "----------------------------------------------------------
 " [設定]nerdtree
 "----------------------------------------------------------
+function! s:copy_grep_menuitem()
+	"NERDTreeからgrepを行うプラグインをインストールする
+	let s:nerdtree=expand('~/.vim/bundle/nerdtree/nerdtree_plugin')
+	let s:grep_menuitem_path=s:nerdtree.'/grep_menuitem.vim'
+	if filereadable(s:grep_menuitem_path)
+		return
+	endif
+	execute '!wget --no-check-certificate https://gist.githubusercontent.com/17g/5141204/raw/d427f0f2699bc4713e75ca0e34963c617a668188/grep_menuitem.vim -O '.s:grep_menuitem_path
+endfunction
+
 if neobundle#is_installed('nerdtree')
 	"<c-t>でnerdtreeをオンオフ。いつでもどこでも。
 	"map <silent> <c-t>   :nerdtreetoggle<cr>
@@ -794,8 +804,10 @@ if neobundle#is_installed('nerdtree')
 	"Default: 1.
 	let g:NERDTreeMinimalUI=0
 	" let g:NERDTreeMinimalUI=1
-
+	
+	call s:copy_grep_menuitem()
 endif
+
 
 "----------------------------------------------------------
 " [設定]vim-expand-region
