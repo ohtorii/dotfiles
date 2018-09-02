@@ -1,25 +1,36 @@
 "-----------------------------------------------
 " setting
 "-----------------------------------------------
-"ファイル読み込み時の文字コード
-set encoding=utf-8
-"Vim script内でマルチバイト文字を使う場合の設定
-scriptencoding utf-8
-
-set fileencoding=utf-8 " 保存時の文字コード
-set fileencodings=ucs-boms,utf-8,euc-jp,cp932 " 読み込み時の文字コードの自動判別. 左側が優先される
-set fileformats=unix,dos,mac " 改行コードの自動判別. 左側が優先される
-
 if has('win32')||has('win64')
-	"set ambiwidth=double " □や○文字が崩れる問題を解決
-
+	"vimprocを利用する
+	let g:vimproc#download_windows_dll = 1
+	" □や○文字が崩れる問題を解決
+	"set ambiwidth=double
+	
 	"画面最後の行をできる限り表示する。
 	set display+=lastline
 
 	"mM=日本語(マルチバイト文字)行の連結時には空白を入力しない。"
 	""j=コメント行処理
 	set formatoptions+=mMj
+	
+	"grep設定
+	if executable('C:\Program Files\Git\usr\bin\grep.exe')
+		set grepprg=C:/Program\ Files/Git/usr/bin/grep.exe\ -n
+		let $PATH .=';C:\Program Files\Git\usr\bin'
+	elseif executable('C:\tools\msys64\usr\bin\grep.exe')
+		set grepprg=C:\tools\msys64\usr\bingrep.exe\ -n
+		let $PATH .=';C:\tools\msys64\usr\bin'
+	endif
 endif
+
+"ファイル読み込み時の文字コード
+set encoding=utf-8
+"Vim script内でマルチバイト文字を使う場合の設定
+scriptencoding utf-8
+set fileencoding=utf-8 " 保存時の文字コード
+set fileencodings=ucs-boms,utf-8,euc-jp,cp932 " 読み込み時の文字コードの自動判別. 左側が優先される
+set fileformats=unix,dos,mac " 改行コードの自動判別. 左側が優先される
 
 " バックアップファイルを作らない
 set nobackup
@@ -34,7 +45,7 @@ set showcmd
 "開いているディレクトリへ自動的に移動する
 set autochdir
 " 自動的にquickfix-windowを開く
-autocmd QuickFixCmdPost *grep* cwindow
+"autocmd QuickFixCmdPost *grep* cwindow
 " qでQuickFixを閉じる
 au FileType qf nnoremap <silent><buffer>q :quit<CR>
 
@@ -736,6 +747,7 @@ function! s:copy_grep_menuitem()
 		return
 	endif
 	execute '!wget --no-check-certificate https://gist.githubusercontent.com/17g/5141204/raw/d427f0f2699bc4713e75ca0e34963c617a668188/grep_menuitem.vim -O '.s:grep_menuitem_path
+	"execute '!wget --no-check-certificate https://raw.githubusercontent.com/seventhsense/nerdtree/development/nerdtree_plugin/grep_menuitem.vim -O '.s:grep_menuitem_path
 endfunction
 
 if neobundle#is_installed('nerdtree')
@@ -982,6 +994,7 @@ if neobundle#is_installed('unite.vim')
 	nnoremap <silent> [unite]o :<C-u>Unite<Space>-vertical<Space>outline<CR>
 	nnoremap <silent> [unite]<CR> :<C-u>Unite<Space>file_rec:!<CR>
 	nnoremap <silent> [unite]m :<C-u>Unite<Space>menu<CR>
+
 	"aliginta
 	nnoremap <silent> [unite]a :<C-u>Unite alignta:options<CR>
 	xnoremap <silent> [unite]a :<C-u>Unite alignta:arguments<CR>
@@ -994,11 +1007,12 @@ if neobundle#is_installed('unite.vim')
 	endfunction"}}}
 
 	" unite grep に ag(The Silver Searcher) を使う
-	if executable('ag')
-		let g:unite_source_grep_command = 'ag'
-		let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-		let g:unite_source_grep_recursive_opt = ''
-	endif
+	"grep後にuniteの画面が空になるためディフォルトのgrepを使用している。
+	"if executable('ag')
+	"	let g:unite_source_grep_command = 'ag'
+	"	let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+	"	let g:unite_source_grep_recursive_opt = ''
+	"endif
 
 	"絶対に使われないショートカットキーに割り当てる
 	"memo:よい方法ではないので将来的に見直したい
@@ -1175,3 +1189,7 @@ if filereadable(s:vimrc_private)
    execute 'source' s:vimrc_private
 endif
 unlet s:vimrc_private
+
+"let s:vimrc_unite=expand('$HOME/.vimrc_unite')
+"execute 'source' s:vimrc_unite
+"unlet s:vimrc_unite
