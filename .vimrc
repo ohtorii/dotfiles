@@ -468,7 +468,8 @@ NeoBundle 'osyo-manga/vim-over'
 NeoBundle 'osyo-manga/vim-brightest'
 
 "サイドバーにファイル一覧を表示
-NeoBundle 'scrooloose/nerdtree'
+"NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'Shougo/vimfiler.vim'
 
 "選択範囲を広げる
 NeoBundle 'terryma/vim-expand-region'
@@ -823,6 +824,68 @@ if neobundle#is_installed('nerdtree')
 	" let g:NERDTreeMinimalUI=1
 	
 	call s:copy_grep_menuitem()
+endif
+
+
+"----------------------------------------------------------
+" [設定]vimfiler
+"----------------------------------------------------------
+if neobundle#is_installed('vimfiler.vim')
+	autocmd VimEnter * if !argc() | VimFiler -split -simple -winwidth=45 -toggle -no-quit | endif
+	autocmd BufEnter * if (!has('vim_starting') && winnr('$') == 1
+		\ && &filetype ==# 'vimfiler') | quit | endif
+
+	"<c-t>でvimfilerをオンオフ。いつでもどこでも。
+	"map <silent> <c-t>   :vimfiler<cr>
+	"lmap <silent> <c-t>  :vimfiler<cr>
+	nmap <silent> <C-t>      :VimFilerBufferDir -split -simple -winwidth=45 -toggle -no-quit<CR>
+	vmap <silent> <C-t> <Esc>:VimFilerBufferDir -split -simple -winwidth=45 -toggle -no-quit<CR>
+	omap <silent> <C-t>      :VimFilerBufferDir -split -simple -winwidth=45 -toggle -no-quit<CR>
+	imap <silent> <C-t> <Esc>:VimFilerBufferDir -split -simple -winwidth=45 -toggle -no-quit<CR>
+	cmap <silent> <C-t> <C-u>:VimFilerBufferDir -split -simple -winwidth=45 -toggle -no-quit<CR>
+	
+	"右側に表示
+	call vimfiler#custom#profile('default', 'context',{'direction' : 'rightbelow'})
+	
+	"vimデフォルトのエクスプローラをvimfilerで置き換える
+	let g:vimfiler_as_default_explorer = 1
+
+	"セーフモードを無効にした状態で起動する(0=アンセーフ/1=セーフ)
+	let g:vimfiler_safe_mode_by_default = 1
+
+	" Like Textmate icons.
+	let g:vimfiler_tree_leaf_icon = ' '
+	let g:vimfiler_tree_opened_icon = '▾'
+	let g:vimfiler_tree_closed_icon = '▸'
+	let g:vimfiler_file_icon = '-'
+	let g:vimfiler_marked_file_icon = '*'
+	
+	" Use trashbox.(Windows only and require latest vimproc.)
+	let g:unite_kind_file_use_trashbox = 1
+
+	"表示しないファイル
+	let g:vimfiler_ignore_pattern = [
+		\'^[cg]?tags$', 
+		\'^\.svn$', '^\.git$', 
+		\'\.swp$', '^\.DS_Store$', '\.dll$', '\.exe$', '\.lnk$',
+		\'^__pycache__$', '\.py[co]$' ]
+
+	"現在開いているバッファのディレクトリを開く
+	"nnoremap <silent> <Leader>fe :<C-u>VimFilerBufferDir -quit<CR>
+
+	"現在開いているバッファをIDE風に開く
+	"nnoremap <silent> <Leader>fi :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
+
+	"デフォルトのキーマッピングを変更
+	"augroup vimrc
+	"  autocmd FileType vimfiler call s:vimfiler_my_settings()
+	"augroup END
+	"function! s:vimfiler_my_settings()
+	"  nmap <buffer> q <Plug>(vimfiler_exit)
+	"  nmap <buffer> Q <Plug>(vimfiler_hide)
+	"endfunction
+	 
+	autocmd FileType vimfiler nnoremap <buffer><silent>/  :<C-u>Unite file -default-action=vimfiler<CR>
 endif
 
 
