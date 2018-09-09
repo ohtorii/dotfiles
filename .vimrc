@@ -108,11 +108,13 @@ if 1
 	cnoremap <C-e> <End>
 	cnoremap <C-d> <Del>
 	" emacs
-	inoremap <C-a> <C-o>^
-	inoremap <C-e> <C-o>$
-	inoremap <C-f> <C-o>w
-	inoremap <C-b> <C-o>b
-	inoremap <C-d> <C-o>x
+	cnoremap <C-p> <Up>
+	cnoremap <C-n> <Down>
+	cnoremap <C-b> <Left>
+	cnoremap <C-f> <Right>
+	cnoremap <C-a> <Home>
+	cnoremap <C-e> <End>
+	cnoremap <C-d> <Del>
 endif
 
 
@@ -164,8 +166,13 @@ set list listchars=tab:→\ ,trail:-,eol:↲
 "set expandtab " タブ入力を複数の空白入力に置き換える
 set tabstop=4 " 画面上でタブ文字が占める幅
 set softtabstop=4 " 連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
-set autoindent " 改行時に前の行のインデントを継続する
-set smartindent " 改行時に前の行の構文をチェックし次の行のインデントを増減する
+if 0
+	" 'autoindent'と同様だが幾つかのC構文を認識し、適切な箇所のインデントを増減させる。
+	set smartindent
+else
+	set cindent
+	set cinoptions+=:0,g0
+endif
 set shiftwidth=4 " smartindentで増減する幅
 
 
@@ -183,7 +190,9 @@ set wrapscan
 " 検索語をハイライト表示
 set hlsearch
 " ESC連打でハイライト解除
-nmap <Esc><Esc> :nohlsearch<CR><Esc>
+nmap <silent> <Esc><Esc> :<c-u>nohlsearch<CR>
+"再描画キー<c-l>でハイライト解除
+nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 
 "-----------------------------------------------
 "カーソル移動
@@ -225,6 +234,51 @@ if 1
 	noremap L 3l
 endif
 
+if 1
+	" Shift + Enterで下に、Shift + Ctrl + Enterで上に空行を挿入します。
+	imap <S-CR> <End><CR>
+	imap <C-S-CR> <Up><End><CR>
+	nnoremap <S-CR> mzo<ESC>`z
+	nnoremap <C-S-CR> mzO<ESC>`z
+	if !has('gui_running')
+		" CUIで入力された<S-CR>,<C-S-CR>が拾えないので
+		" iTerm2のキー設定を利用して特定の文字入力をmapする
+		"(see) https://stackoverflow.com/questions/5388562/cant-map-s-cr-in-vim
+		map ✠ <S-CR>
+		imap ✠ <S-CR>
+		map ✢ <C-S-CR>
+		imap ✢ <C-S-CR>
+	endif
+endif
+
+if 1
+	" 行を上下に移動
+	nnoremap <C-Up> "zdd<Up>"zP
+	nnoremap <C-Down> "zdd"zp
+	" 複数行を上下に移動
+	vnoremap <C-Up> "zx<Up>"zP`[V`]
+	vnoremap <C-Down> "zx"zp`[V`]
+endif
+
+if 1
+	" タイポ修正（同じ機能がMACにあります）
+	"|がカーソルだとして）teｈ|の状態で<C-t>を入力するとthe|という状態になります。
+	"(memo)標準の<c-t>キー（インデントを増やす） を潰しています。
+	inoremap <C-t> <Esc><Left>"zx"zpa
+endif
+
+if 1
+	" xやsではヤンクしない
+	nnoremap x "_x
+	nnoremap s "_s
+endif
+
+if 1
+	" ビジュアルモードで連続ペーストできるようにする
+	xnoremap <expr> p 'pgv"'.v:register.'y`>'
+endif
+
+
 "メタキーを使うための設定
 "http://blog.remora.cx/2012/07/using-alt-as-meta-in-vim.html
 "
@@ -245,8 +299,6 @@ endfunction
 "Windowsのキーマッピング
 "source $VIMRUNTIME/mswin.vim
 
-"ESC押しづらいため
-"inoremap <C-c> <Esc>
 if 1
 	"ウインドウ上下分割
 	"call DefineKey_M('h')
@@ -422,6 +474,13 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 "----------------------------------------------------------
 " ここに追加したいVimプラグインを記述する
+NeoBundle 'Shougo/vimproc.vim', {
+\ 'build' : {
+\     'mac' : 'make',
+\     'linux' : 'make',
+\     'unix' : 'gmake',
+\    },
+\ }
 
 " カラースキームmolokai
 NeoBundle 'tomasr/molokai'
@@ -470,6 +529,8 @@ NeoBundle 'osyo-manga/vim-brightest'
 "サイドバーにファイル一覧を表示
 "NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'Shougo/vimfiler.vim'
+"vimfilerにアイコン追加
+" NeoBundle 'ryanoasis/vim-devicons'
 
 "選択範囲を広げる
 NeoBundle 'terryma/vim-expand-region'
@@ -757,14 +818,14 @@ function! s:copy_grep_menuitem()
 endfunction
 
 if neobundle#is_installed('nerdtree')
-	"<c-t>でnerdtreeをオンオフ。いつでもどこでも。
-	"map <silent> <c-t>   :nerdtreetoggle<cr>
-	"lmap <silent> <c-t>  :nerdtreetoggle<cr>
-	nmap <silent> <C-t>      :NERDTreeToggle<CR>
-	vmap <silent> <C-t> <Esc>:NERDTreeToggle<CR>
-	omap <silent> <C-t>      :NERDTreeToggle<CR>
-	imap <silent> <C-t> <Esc>:NERDTreeToggle<CR>
-	cmap <silent> <C-t> <C-u>:NERDTreeToggle<CR>
+	"<c-o>でnerdtreeをオンオフ。いつでもどこでも。
+	"map <silent> <c-o>   :nerdtreetoggle<cr>
+	"lmap <silent> <c-o>  :nerdtreetoggle<cr>
+	nmap <silent> <c-o>      :NERDTreeToggle<CR>
+	vmap <silent> <c-o> <Esc>:NERDTreeToggle<CR>
+	omap <silent> <c-o>      :NERDTreeToggle<CR>
+	imap <silent> <c-o> <Esc>:NERDTreeToggle<CR>
+	cmap <silent> <c-o> <C-u>:NERDTreeToggle<CR>
 
 	" コマンドラインでファイル指定されていないときはNerdtreeを開く。
 	" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -835,14 +896,15 @@ if neobundle#is_installed('vimfiler.vim')
 	autocmd BufEnter * if (!has('vim_starting') && winnr('$') == 1
 		\ && &filetype ==# 'vimfiler') | quit | endif
 
-	"<c-t>でvimfilerをオンオフ。いつでもどこでも。
-	"map <silent> <c-t>   :vimfiler<cr>
-	"lmap <silent> <c-t>  :vimfiler<cr>
-	nmap <silent> <C-t>      :VimFilerBufferDir -split -simple -winwidth=45 -toggle -no-quit<CR>
-	vmap <silent> <C-t> <Esc>:VimFilerBufferDir -split -simple -winwidth=45 -toggle -no-quit<CR>
-	omap <silent> <C-t>      :VimFilerBufferDir -split -simple -winwidth=45 -toggle -no-quit<CR>
-	imap <silent> <C-t> <Esc>:VimFilerBufferDir -split -simple -winwidth=45 -toggle -no-quit<CR>
-	cmap <silent> <C-t> <C-u>:VimFilerBufferDir -split -simple -winwidth=45 -toggle -no-quit<CR>
+	"<c-o>でvimfilerをオンオフ。いつでもどこでも。
+	"map <silent> <c-o>   :vimfiler<cr>
+	"lmap <silent> <c-o>  :vimfiler<cr>
+	nmap <silent> <c-o>      :VimFilerBufferDir -split -toggle<CR>
+	vmap <silent> <c-o> <Esc>:VimFilerBufferDir -split -toggle<CR>
+	omap <silent> <c-o>      :VimFilerBufferDir -split -toggle<CR>
+	imap <silent> <c-o> <Esc>:VimFilerBufferDir -split -toggle<CR>
+	cmap <silent> <c-o> <C-u>:VimFilerBufferDir -split -toggle<CR>
+	":VimFilerBufferDir -split -simple -winwidth=35 -no-quit 
 	
 	"右側に表示
 	call vimfiler#custom#profile('default', 'context',{'direction' : 'rightbelow'})
@@ -858,7 +920,8 @@ if neobundle#is_installed('vimfiler.vim')
 	let g:vimfiler_tree_opened_icon = '▾'
 	let g:vimfiler_tree_closed_icon = '▸'
 	let g:vimfiler_file_icon = '-'
-	let g:vimfiler_marked_file_icon = '*'
+	let g:vimfiler_readonly_file_icon = '✗'
+    let g:vimfiler_marked_file_icon = '✓'
 	
 	" Use trashbox.(Windows only and require latest vimproc.)
 	let g:unite_kind_file_use_trashbox = 1
@@ -1073,7 +1136,7 @@ if neobundle#is_installed('unite.vim')
     nnoremap <silent> [unite]gp :<C-U>:Unite<Space>grep:!<CR>
 	"}}}
 
-	"ファイル検索 {{{
+	"ファイル検索(find) {{{
 	"-------------------------------------------------------------------
 	"カレントディレクトリを表示
 	nnoremap <silent> [unite]fc :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
