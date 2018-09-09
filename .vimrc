@@ -977,7 +977,8 @@ if neobundle#is_installed('vimfiler.vim')
 
 		" Unite bookmark連携
 		nmap <buffer>B :<C-U>Unite bookmark<CR>
-		nmap <buffer>b :<C-U>UniteBookmarkAdd<CR>
+		nmap <buffer>BA :<C-U>UniteBookmarkAdd<CR>
+		nmap <buffer>Ba BA
 		nmap <buffer><C-L> <C-W><C-W>
 		nmap <buffer><CR> <Plug>(vimfiler_edit_file)
 		nmap <buffer>v <Plug>(vimfiler_view_file)
@@ -1153,6 +1154,7 @@ if neobundle#is_installed('unite.vim')
 	"除外ファイル
 	let s:unite_ignore_patterns='\([gc]\?tags\|__pycache__\)$\|\.\(svn\|git\|DS_Store\|bmp\|ico\|gif\|jpe\?g\|png\|webp\|dll\|exe\|py[co]\)$'
 	call unite#custom#source('file', 'ignore_pattern', s:unite_ignore_patterns)
+	call unite#custom#source('file/async', 'ignore_pattern', s:unite_ignore_patterns)
 	call unite#custom#source('file_rec', 'ignore_pattern', s:unite_ignore_patterns)
 	call unite#custom#source('file_rec/async', 'ignore_pattern', s:unite_ignore_patterns)
 	call unite#custom#source('file_rec/git', 'ignore_pattern', s:unite_ignore_patterns)
@@ -1199,22 +1201,21 @@ if neobundle#is_installed('unite.vim')
 	nnoremap <silent> [unite]fp :<C-u>Unite<Space>file_rec:!<CR>
 
 	"ディレクトリ版
-	nnoremap <silent> [unite]dm :<C-u>Unite<Space>buffer file_mru directory_mru<CR>
+	nnoremap <silent> [unite]dm :<C-u>Unite<Space>directory_mru<CR>
 	nnoremap <silent> [unite]dc :<C-u>Unite<Space>UniteWithBufferDir -buffer-name=files file<CR>
 	nnoremap <silent> [unite]dC :<C-u>Unite<Space>directory_rec<CR>
 	nnoremap <silent> [unite]dp :<C-u>Unite<Space>directory_rec:!<CR>
 	" }}}
-	
-
 
 	"Bookmark {{{
 	"-------------------------------------------------------------------
 	"ブックマーク一覧
-	"nnoremap <silent> [unite]c :<C-u>Unite bookmark<CR>
+	nnoremap <silent> [unite]B :<C-u>Unite bookmark<CR>
 	"ブックマークに追加
-	"nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
+	nnoremap <silent> [unite]BA :<C-u>UniteBookmarkAdd<CR>
+	nnoremap <silent> [unite]Ba BA
 	"}}}
-	
+
 	"aliginta
 	nnoremap <silent> [unite]a :<C-u>Unite alignta:options<CR>
 	xnoremap <silent> [unite]a :<C-u>Unite alignta:arguments<CR>
