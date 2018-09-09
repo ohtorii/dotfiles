@@ -496,6 +496,9 @@ NeoBundle 'vim-jp/vital.vim'
 " 末尾の全角と半角の空白文字を赤くハイライト(FixWhitespace コマンド)
 NeoBundle 'bronson/vim-trailing-whitespace'
 
+"括弧を自動で閉じる
+NeoBundle 'cohama/lexima.vim'
+
 " インデントの可視化
 NeoBundle 'Yggdroot/indentLine'
 " tab->space / space->tab
@@ -534,9 +537,27 @@ NeoBundle 'Shougo/vimfiler.vim'
 
 "選択範囲を広げる
 NeoBundle 'terryma/vim-expand-region'
+
+" text-object拡張"{{{
 NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'kana/vim-textobj-line'
 NeoBundle 'kana/vim-textobj-entire'
+" NeoBundle 'emonkak/vim-operator-comment'
+" NeoBundle 'https://github.com/kana/vim-textobj-jabraces.git'
+" NeoBundle 'kana/vim-textobj-datetime'      " d 日付
+" NeoBundle 'kana/vim-textobj-fold.git'      " z 折りたたまれた{{ {をtext-objectに
+" NeoBundle 'kana/vim-textobj-lastpat.git'   " /? 最後に検索されたパターンをtext-objectに
+" NeoBundle 'kana/vim-textobj-syntax.git'    " y syntax hilightされたものをtext-objectに
+" NeoBundle 'textobj-entire'                 " e buffer全体をtext-objectに
+" NeoBundle 'thinca/vim-textobj-comment'     " c commentをtext-objectに
+" NeoBundle 'kana/vim-operator-user'
+" NeoBundle 'kana/vim-textobj-function.git'  " f 関数をtext-objectに
+" NeoBundle 'kana/vim-textobj-indent.git'    " i I インデントをtext-objectに
+" NeoBundle 'kana/vim-textobj-user'          " textobject拡張の元
+" NeoBundle 'operator-camelize' "operator-camelize : camel-caseへの変換
+" NeoBundle 'thinca/vim-textobj-plugins.git' " vim-textobj-plugins : いろんなものをtext-objectにする
+" NeoBundle 'tyru/operator-html-escape.vim'
+" }}}
 
 "テキストを囲う
 NeoBundle 'tpope/vim-surround'
@@ -914,7 +935,7 @@ if neobundle#is_installed('vimfiler.vim')
 
 	"セーフモードを無効にした状態で起動する(0=アンセーフ/1=セーフ)
 	let g:vimfiler_safe_mode_by_default = 1
-
+	let g:vimfiler_auto_cd=1
 	" Like Textmate icons.
 	let g:vimfiler_tree_leaf_icon = ' '
 	let g:vimfiler_tree_opened_icon = '▾'
@@ -939,16 +960,38 @@ if neobundle#is_installed('vimfiler.vim')
 	"現在開いているバッファをIDE風に開く
 	"nnoremap <silent> <Leader>fi :<C-u>VimFilerBufferDir -split -simple -winwidth=35 -no-quit<CR>
 
-	"デフォルトのキーマッピングを変更
-	"augroup vimrc
-	"  autocmd FileType vimfiler call s:vimfiler_my_settings()
-	"augroup END
-	"function! s:vimfiler_my_settings()
-	"  nmap <buffer> q <Plug>(vimfiler_exit)
-	"  nmap <buffer> Q <Plug>(vimfiler_hide)
-	"endfunction
-	 
 	autocmd FileType vimfiler nnoremap <buffer><silent>/  :<C-u>Unite file -default-action=vimfiler<CR>
+	
+	"VimFilerKeyMapping{{{
+	aug VimFilerKeyMapping
+	  au!
+	  au FileType vimfiler call s:vimfiler_local()
+
+	  function! s:vimfiler_local()
+		if has('unix')
+		  " 開き方
+		  call vimfiler#set_execute_file('sh', 'sh')
+		  call vimfiler#set_execute_file('mp3', 'iTunes')
+		endif
+		setl nonumber
+
+		" Unite bookmark連携
+		nmap <buffer>B :<C-U>Unite bookmark<CR>
+		nmap <buffer>b :<C-U>UniteBookmarkAdd<CR>
+		nmap <buffer><C-L> <C-W><C-W>
+		nmap <buffer><CR> <Plug>(vimfiler_edit_file)
+		nmap <buffer>v <Plug>(vimfiler_view_file)
+		" nmap <buffer><silent><C-J>
+		nmap <buffer><silent><C-J><C-J> :<C-U>Unite file_mru<CR>
+		" nmap <buffer><silent><C-J><C-U> :<C-U>Unite file<CR>
+		nmap <buffer><silent><C-J><C-U> :<C-U>UniteWithBufferDir -buffer-name=files file<CR>
+
+		" Unite bookmarkのアクションをVimFilerに
+		call unite#custom_default_action('source/bookmark/directory' , 'vimfiler')
+	  endfunction
+	aug END
+"}}}
+
 endif
 
 
@@ -1103,9 +1146,17 @@ if neobundle#is_installed('unite.vim')
 	let g:unite_source_history_yank_enable =1
 	"リンクファイルをMRUメニューに表示する
 	"let g:neomru#follow_links = 1
-	"dotfilesを表示する
-	call unite#custom#source('file', 'matchers', "matcher_default")
 
+	"dotfilesを表示する
+	" call unite#custom#source('file', 'matchers', "matcher_default")
+	
+	"除外ファイル
+	let s:unite_ignore_patterns='\([gc]\?tags\|__pycache__\)$\|\.\(svn\|git\|DS_Store\|bmp\|ico\|gif\|jpe\?g\|png\|webp\|dll\|exe\|py[co]\)$'
+	call unite#custom#source('file', 'ignore_pattern', s:unite_ignore_patterns)
+	call unite#custom#source('file_rec', 'ignore_pattern', s:unite_ignore_patterns)
+	call unite#custom#source('file_rec/async', 'ignore_pattern', s:unite_ignore_patterns)
+	call unite#custom#source('file_rec/git', 'ignore_pattern', s:unite_ignore_patterns)
+	
 	" ESCキーを2回押すと終了する
 	au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
 	au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:
@@ -1120,7 +1171,6 @@ if neobundle#is_installed('unite.vim')
 	nnoremap <silent> [unite]t :<C-u>Unite<Space>tab<CR>
 	nnoremap <silent> [unite]h :<C-u>Unite<Space>history/yank<CR>
 	nnoremap <silent> [unite]o :<C-u>Unite<Space>-vertical<Space>outline<CR>
-	nnoremap <silent> [unite]d :<C-u>Unite<Space>directory_mru<CR>
 	
 	"grep {{{
 	"-------------------------------------------------------------------
@@ -1138,15 +1188,25 @@ if neobundle#is_installed('unite.vim')
 
 	"ファイル検索(find) {{{
 	"-------------------------------------------------------------------
+	"履歴(MRU)から検索(利便性を考慮してbuffer+file+directory混在)
+	nnoremap <silent> [unite]fm :<C-u>Unite<Space>buffer file_mru directory_mru<CR>
+	"
 	"カレントディレクトリを表示
 	nnoremap <silent> [unite]fc :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-	nnoremap <silent> [unite]fm :<C-u>Unite<Space>buffer file_mru<CR>
 	"カレントディレクトリ以下に対して
 	nnoremap <silent> [unite]fC :<C-u>Unite<Space>file_rec<CR>
 	"プロジェクト以下に対して
 	nnoremap <silent> [unite]fp :<C-u>Unite<Space>file_rec:!<CR>
-	"}}}
+
+	"ディレクトリ版
+	nnoremap <silent> [unite]dm :<C-u>Unite<Space>buffer file_mru directory_mru<CR>
+	nnoremap <silent> [unite]dc :<C-u>Unite<Space>UniteWithBufferDir -buffer-name=files file<CR>
+	nnoremap <silent> [unite]dC :<C-u>Unite<Space>directory_rec<CR>
+	nnoremap <silent> [unite]dp :<C-u>Unite<Space>directory_rec:!<CR>
+	" }}}
 	
+
+
 	"Bookmark {{{
 	"-------------------------------------------------------------------
 	"ブックマーク一覧
