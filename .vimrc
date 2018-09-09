@@ -920,11 +920,11 @@ if neobundle#is_installed('vimfiler.vim')
 	"<c-o>でvimfilerをオンオフ。いつでもどこでも。
 	"map <silent> <c-o>   :vimfiler<cr>
 	"lmap <silent> <c-o>  :vimfiler<cr>
-	nmap <silent> <c-o>      :VimFilerBufferDir -split -toggle<CR>
-	vmap <silent> <c-o> <Esc>:VimFilerBufferDir -split -toggle<CR>
-	omap <silent> <c-o>      :VimFilerBufferDir -split -toggle<CR>
-	imap <silent> <c-o> <Esc>:VimFilerBufferDir -split -toggle<CR>
-	cmap <silent> <c-o> <C-u>:VimFilerBufferDir -split -toggle<CR>
+	nmap <silent> <c-o>      :VimFilerBufferDir -simple -winwidth=45 -split -toggle<CR>
+	vmap <silent> <c-o> <Esc>:VimFilerBufferDir -simple -winwidth=45 -split -toggle<CR>
+	omap <silent> <c-o>      :VimFilerBufferDir -simple -winwidth=45 -split -toggle<CR>
+	imap <silent> <c-o> <Esc>:VimFilerBufferDir -simple -winwidth=45 -split -toggle<CR>
+	cmap <silent> <c-o> <C-u>:VimFilerBufferDir -simple -winwidth=45 -split -toggle<CR>
 	":VimFilerBufferDir -split -simple -winwidth=35 -no-quit 
 	
 	"右側に表示
