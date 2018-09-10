@@ -474,13 +474,18 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 "----------------------------------------------------------
 " ここに追加したいVimプラグインを記述する
-NeoBundle 'Shougo/vimproc.vim', {
-\ 'build' : {
-\     'mac' : 'make',
-\     'linux' : 'make',
-\     'unix' : 'gmake',
-\    },
-\ }
+
+if has('win32')||has('win64')
+	"pass
+else
+	NeoBundle 'Shougo/vimproc.vim', {
+	\ 'build' : {
+	\     'mac' : 'make',
+	\     'linux' : 'make',
+	\     'unix' : 'gmake',
+	\    },
+	\ }
+endif
 
 " カラースキームmolokai
 NeoBundle 'tomasr/molokai'
