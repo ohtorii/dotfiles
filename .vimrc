@@ -973,24 +973,12 @@ if neobundle#is_installed('vimfiler.vim')
 	  au FileType vimfiler call s:vimfiler_local()
 
 	  function! s:vimfiler_local()
-		if has('unix')
-		  " 開き方
-		  call vimfiler#set_execute_file('sh', 'sh')
-		  call vimfiler#set_execute_file('mp3', 'iTunes')
-		endif
 		setl nonumber
 
 		" Unite bookmark連携
 		nmap <buffer>B :<C-U>Unite bookmark<CR>
 		nmap <buffer>BA :<C-U>UniteBookmarkAdd<CR>
 		nmap <buffer>Ba BA
-		nmap <buffer><C-L> <C-W><C-W>
-		nmap <buffer><CR> <Plug>(vimfiler_edit_file)
-		nmap <buffer>v <Plug>(vimfiler_view_file)
-		" nmap <buffer><silent><C-J>
-		nmap <buffer><silent><C-J><C-J> :<C-U>Unite file_mru<CR>
-		" nmap <buffer><silent><C-J><C-U> :<C-U>Unite file<CR>
-		nmap <buffer><silent><C-J><C-U> :<C-U>UniteWithBufferDir -buffer-name=files file<CR>
 
 		" Unite bookmarkのアクションをVimFilerに
 		call unite#custom_default_action('source/bookmark/directory' , 'vimfiler')
