@@ -1478,8 +1478,9 @@ if neobundle#is_installed('vim-alignta')
 endif
 
 "----------------------------------------------------------
-"秀丸エディタ互換
+"秀丸エディタ関係
 "----------------------------------------------------------
+autocmd BufNewFile,BufRead *.mac setfiletype cpp
 if 0
 	if neobundle#is_installed('unite.vim')
 		"ファイル一覧を開く
