@@ -1,6 +1,6 @@
 @echo off
 REM
-REM Windowsの環境設定
+REM Windows�̊��ݒ�
 REM
 setlocal
 set HOME=%HOMEDRIVE%%HOMEPATH%
@@ -8,6 +8,9 @@ set HOME=%HOMEDRIVE%%HOMEPATH%
 call :proc .agignore .agignore
 call :proc _vimrc .vimrc
 call :proc _gvimrc .gvimrc
+
+pause
+
 exit /b 0
 
 
