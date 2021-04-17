@@ -600,6 +600,16 @@ NeoBundle 'Shougo/neoyank.vim'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'h1mesuke/vim-alignta'
+
+"LSP
+NeoBundle 'prabirshrestha/asyncomplete.vim'
+NeoBundle 'prabirshrestha/asyncomplete-lsp.vim'
+NeoBundle 'prabirshrestha/vim-lsp'
+NeoBundle 'mattn/vim-lsp-settings'
+NeoBundle 'mattn/vim-lsp-icons'
+NeoBundle 'hrsh7th/vim-vsnip'
+NeoBundle 'hrsh7th/vim-vsnip-integ'
+
 "----------------------------------------------------------
 call neobundle#end()
 
@@ -1476,6 +1486,39 @@ if neobundle#is_installed('vim-alignta')
 	      \]
 	unlet s:comment_leadings
 endif
+
+"----------------------------------------------------------
+" [設定]vim-lsp
+"----------------------------------------------------------
+if empty(globpath(&rtp, 'autoload/lsp.vim'))
+  finish
+endif
+
+function! s:on_lsp_buffer_enabled() abort
+  setlocal omnifunc=lsp#complete
+  setlocal signcolumn=yes
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> <f2> <plug>(lsp-rename)
+  inoremap <expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
+endfunction
+
+augroup lsp_install
+  au!
+  autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+let g:lsp_diagnostics_enabled = 1
+let g:lsp_diagnostics_echo_cursor = 1
+let g:asyncomplete_auto_popup = 1
+let g:asyncomplete_auto_completeopt = 0
+let g:asyncomplete_popup_delay = 200
+let g:lsp_text_edit_enabled = 1
+
+" LSP-Debugging
+let g:lsp_log_verbose = 1
+let g:lsp_log_file = expand('~/vim-lsp.log')
+" for asyncomplete.vim log
+let g:asyncomplete_log_file = expand('~/asyncomplete.log')
 
 "----------------------------------------------------------
 "秀丸エディタ関係
