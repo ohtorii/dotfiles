@@ -594,7 +594,7 @@ NeoBundle 'airblade/vim-gitgutter'
 "Unite
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/unite-outline'
-NeoBundle 'Shougo/neocomplete.vim'
+"NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/neoyank.vim'
 NeoBundle 'Shougo/neosnippet'
@@ -609,6 +609,7 @@ NeoBundle 'mattn/vim-lsp-settings'
 NeoBundle 'mattn/vim-lsp-icons'
 NeoBundle 'hrsh7th/vim-vsnip'
 NeoBundle 'hrsh7th/vim-vsnip-integ'
+NeoBundle 'PProvost/vim-ps1'
 
 "----------------------------------------------------------
 call neobundle#end()
