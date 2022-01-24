@@ -451,7 +451,7 @@ if has('win32')||has('win64')
 	    " NeoBundleが未インストールであればgit cloneする
 	    if !isdirectory(expand("$VIM/~/.vim/bundle/neobundle.vim/"))
 	        echo "install NeoBundle..."
-	        :call system("git clone git://github.com/Shougo/neobundle.vim $VIM/~/.vim/bundle/neobundle.vim")
+	        :call system("git clone https://github.com/Shougo/neobundle.vim.git $VIM/~/.vim/bundle/neobundle.vim")
 	    endif
 	endif
 else
@@ -462,7 +462,7 @@ else
 	    " NeoBundleが未インストールであればgit cloneする
 	    if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
 	        echo "install NeoBundle..."
-	        :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
+	        :call system("git clone https://github.com/Shougo/neobundle.vim.git ~/.vim/bundle/neobundle.vim")
 	    endif
 	endif
 endif
