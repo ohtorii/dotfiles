@@ -1,23 +1,25 @@
-function fish_user_key_bindings
-  # Emacsキーバインドが使われるように、モードごとにこれを一度実行する。
-  #fish_default_key_bindings -M insert
-  # fish_vi_key_bindings は引数なしではすべてのキーバインドをデフォルトに戻す
-  # fish_vi_key_bindingsの引数には最初のモードを指定する(insert, default, visual)
-  #fish_vi_key_bindings insert
-
-  bind \cr peco_select_history # Bind for peco select history to Ctrl+r
+if status is-interactive
+    # Commands to run in interactive sessions can go here
 end
 
-#from. http://fishshell.com/docs/current/index.html#editor
-#function hybrid_bindings --description "Vi-style bindings that inherit emacs-style bindings in all modes"
-#    for mode in default insert visual
-#        fish_default_key_bindings -M $mode
-#    end
-#    fish_vi_key_bindings --no-erase
-#end
-#set -g fish_key_bindings hybrid_bindings
+# MY_USERPROFILE を定義
+if not set -q USERPROFILE
+  echo "ERROR: USERPROFILE environment variable is not set."
+end
+set  MY_USERPROFILE (cygpath -u "$USERPROFILE")
+echo "MY_USERPROFILE is set to: $MY_USERPROFILE"
 
-#SVN
-set -x VISUAL vim
-set -x MONO_GAC_PREFIX '/usr/local'
+set -U EDITOR /C/ProgramData/chocolatey/bin/edit.exe
 
+zoxide init fish | source
+
+# pacman -S mingw64/mingw-w64-x86_64-bat
+set -U fish_user_paths /C/tools/msys64/mingw64/bin $fish_user_paths
+
+# jethrokuan/fzf
+set -U FZF_LEGACY_KEYBINDINGS 0
+
+# ghq
+set -g GHQ_SELECTOR fzf
+set -g GHQ_SELECTOR_OPTS --height 40%
+set -U fish_user_paths $MY_USERPROFILE/scoop/shims $fish_user_paths
